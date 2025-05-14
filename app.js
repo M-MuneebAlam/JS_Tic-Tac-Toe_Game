@@ -2,6 +2,7 @@ let boxes = document.querySelectorAll(".box");
 let resetBtn = document.querySelector("#reset-btn");
 let newGameBtn = document.querySelector("#new-btn");
 let msgContainer = document.querySelector(".msg-container");
+const gameMsgContainer = document.querySelector("#game-msg-container");
 let msg = document.querySelector("#msg");
  
 
@@ -21,7 +22,7 @@ const winPatterns = [
 const resetGame = () => {
     turnO = true;
     enableBoxes();
-    msgContainer.classList.add("hide");
+    gameMsgContainer.classList.add("hide");
 };
 
 boxes.forEach((box) => {
@@ -54,10 +55,16 @@ const enableBoxes = () => {
     }
 };
 
+const showDraw = () => {
+    msg.innerText = "It is draw!";
+    gameMsgContainer.classList.remove("hide");
+    disableBoxes();
+};
+
 
 const showWinner = (winner) => {
     msg.innerText = `Congratulations, Winner is ${winner}`;
-    msgContainer.classList.remove("hide");
+    gameMsgContainer.classList.remove("hide");
     disableBoxes();
 };
 
@@ -77,10 +84,25 @@ const checkWinner = () => {
             if(pos1Val === pos2Val && pos2Val === pos3Val){
                 // console.log("winner", pos1Val);
                 showWinner(pos1Val);
+                return; // Exit the function if there's a winner
             }
         }
     }
-}; 
+
+        // Check for draw condition
+        let isDraw = true;
+        for (let box of boxes) {
+            if (box.innerText === "") {
+                isDraw = false;
+                break;
+            }
+        }
+
+        if (isDraw) {
+            showDraw(); // Call a function to handle the draw condition
+        };
+
+};
 
 newGameBtn.addEventListener("click", resetGame);
 resetBtn.addEventListener("click", resetGame);
